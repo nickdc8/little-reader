@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f6f7f9" />
+    <meta
+      name="description"
+      content="A small RSS reader. Choose your sources, organise them into folders, and read at your own pace."
+    />
+    <title>Little Reader</title>
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <script src="/theme.js"></script>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to articles</a>
+    <header class="topbar">
+      <div class="brand-area">
+        <button
+          class="icon-button"
+          id="menu"
+          aria-label="Toggle sidebar"
+          aria-controls="sidebar"
+          aria-expanded="true"
+        ></button
+        ><a class="brand" href="/" aria-label="Little Reader home"
+          ><img src="/icon.svg" width="27" height="27" alt="" /><span
+            >little<span class="brand-light">reader</span></span
+          ></a
+        >
+      </div>
+      <div class="search-wrap">
+        <span id="search-icon"></span
+        ><input
+          id="search"
+          type="search"
+          aria-label="Search articles"
+          placeholder="Search your articles"
+        /><kbd>/</kbd>
+      </div>
+      <div class="header-actions">
+        <span class="local-label" id="local-label">Saved in this browser</span
+        ><button
+          id="theme-toggle"
+          class="icon-button theme-toggle"
+          aria-label="Switch to dark mode"
+          title="Switch to dark mode"
+        ></button>
+      </div>
+    </header>
+    <div class="shell">
+      <aside id="sidebar" aria-label="Feed navigation">
+        <nav id="main-nav" aria-label="Library"></nav>
+        <div class="section-label">
+          <span>Feeds</span
+          ><button
+            class="icon-button"
+            id="new-folder"
+            aria-label="Create folder"
+            title="Create folder"
+          ></button>
+        </div>
+        <nav id="feed-nav" aria-label="Folders and feeds"></nav>
+        <button class="add-feed" id="add-feed"></button>
+        <div class="sidebar-bottom">
+          <button id="manage"></button><button id="import"></button
+          ><button id="export"></button><button id="backup"></button>
+          <p>Your sources. At your pace.</p>
+        </div>
+      </aside>
+      <button id="scrim" aria-label="Close navigation" hidden></button>
+      <main id="main" tabindex="-1">
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow" id="edition"></div>
+            <h1 id="view-title">All articles</h1>
+            <p id="view-description"></p>
+          </div>
+          <button id="refresh" class="button secondary"></button>
+        </div>
+        <div id="sample-banner" class="sample-banner" hidden>
+          <div>
+            <strong>A little look around</strong
+            ><span
+              >These are sample articles. Add a feed to make this space
+              yours.</span
+            >
+          </div>
+          <button id="start-fresh" class="button secondary">Start fresh</button>
+        </div>
+        <div class="toolbar">
+          <div class="segmented" aria-label="Article filter">
+            <button id="filter-all" aria-pressed="true">All articles</button
+            ><button id="filter-unread" aria-pressed="false">
+              Unread only
+            </button>
+          </div>
+          <div class="toolbar-right">
+            <button id="mark-all" class="text-button"></button
+            ><span class="divider"></span
+            ><button
+              id="view-list"
+              class="icon-button"
+              aria-label="Comfortable view"
+              title="Comfortable view"
+              aria-pressed="true"
+            ></button
+            ><button
+              id="view-compact"
+              class="icon-button"
+              aria-label="Compact view"
+              title="Compact view"
+              aria-pressed="false"
+            ></button>
+          </div>
+        </div>
+        <div id="feed-errors" role="status"></div>
+        <section id="articles" aria-label="Articles"></section>
+        <footer class="reading-footer">
+          <span id="end-label"></span><span>Made for a slower internet</span>
+        </footer>
+      </main>
+    </div>
+    <dialog id="dialog"><div id="dialog-content"></div></dialog>
+    <input
+      type="file"
+      id="import-file"
+      accept=".opml,.xml,.json,application/json,text/xml"
+      hidden
+    />
+    <div id="toast" role="status" aria-live="polite" hidden></div>
+  </body>
+</html>

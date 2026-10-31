@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head>
+    <title>Little Reader starter feeds</title>
+  </head>
+  <body>
+    <outline text="News">
+      <outline text="BBC World" title="BBC World" type="rss" xmlUrl="https://feeds.bbci.co.uk/news/world/rss.xml" />
+      <outline text="The Guardian" title="The Guardian" type="rss" xmlUrl="https://www.theguardian.com/international/rss" />
+    </outline>
+    <outline text="Technology">
+      <outline text="The Verge" title="The Verge" type="rss" xmlUrl="https://www.theverge.com/rss/index.xml" />
+      <outline text="Ars Technica" title="Ars Technica" type="rss" xmlUrl="https://feeds.arstechnica.com/arstechnica/index/" />
+    </outline>
+    <outline text="Design &amp; writing">
+      <outline text="Smashing Magazine" title="Smashing Magazine" type="rss" xmlUrl="https://www.smashingmagazine.com/feed/" />
+      <outline text="A List Apart" title="A List Apart" type="rss" xmlUrl="https://alistapart.com/main/feed/" />
+    </outline>
+    <outline text="Science">
+      <outline text="NASA" title="NASA" type="rss" xmlUrl="https://www.nasa.gov/news-release/feed/" />
+    </outline>
+    <outline text="Food">
+      <outline text="Smitten Kitchen" title="Smitten Kitchen" type="rss" xmlUrl="http://feeds.feedburner.com/smittenkitchen" />
+    </outline>
+  </body>
+</opml>
