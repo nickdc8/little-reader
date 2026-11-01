@@ -1,3 +1,4 @@
+import { renderArticleContent } from "/article-content.js";
 const $ = (selector) => document.querySelector(selector);
 const icons = {
   menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
@@ -542,9 +543,62 @@ function showArticle(id) {
   updateItem(id, { read: true });
   openDialog(
     "Reading",
-    `${state.demo ? '<span class="sample-note">Sample article</span>' : ""}<div class="reader-source">${esc(feed?.title || "Source")} · ${esc(relative(item.date))}</div><h3 class="reader-title">${esc(item.title)}</h3>${safeUrl(item.image) || (state.demo && /^\/sample-\w+\.svg$/.test(item.image)) ? `<img class="reader-image" src="${esc(item.image)}" alt="" referrerpolicy="no-referrer">` : ""}<div class="reader-body">${esc(item.summary || "This feed supplies a title only. Read the article on the publisher’s website.")}</div><div class="reader-bottom"><button class="button secondary ${item.starred ? "starred" : ""}" data-reader-star="${esc(id)}" aria-pressed="${!!item.starred}">${icon("star")}${item.starred ? "Starred" : "Star article"}</button>${safeUrl(item.link) ? `<a class="button primary" href="${esc(safeUrl(item.link))}" target="_blank" rel="noopener noreferrer">Read original ${icon("external")}</a>` : '<span class="hint">Sample text for trying the reader</span>'}</div>`,
+    `${state.demo ? '<span class="sample-note">Sample article</span>' : ""}<div class="reader-source">${esc(feed?.title || "Source")} · ${esc(relative(item.date))}</div><h3 class="reader-title">${esc(item.title)}</h3>${safeUrl(item.image) || (state.demo && /^\/sample-\w+\.svg$/.test(item.image)) ? `<img class="reader-image" src="${esc(item.image)}" alt="" referrerpolicy="no-referrer">` : ""}${safeUrl(item.link) && !state.demo ? `<div class="reader-tools"><span id="reader-content-status">${item.fullArticle?.html ? "Full article" : "Feed preview"}</span>${!item.fullArticle?.html ? `<button class="button secondary" data-full-article="${esc(id)}">Load full article</button>` : ""}</div><p id="reader-error" class="form-error" role="status" hidden></p>` : ""}<div class="reader-body" id="reader-body">${esc(item.summary || "This feed supplies a title only. Read the article on the publisher’s website.")}</div><div class="reader-bottom"><button class="button secondary ${item.starred ? "starred" : ""}" data-reader-star="${esc(id)}" aria-pressed="${!!item.starred}">${icon("star")}${item.starred ? "Starred" : "Star article"}</button>${safeUrl(item.link) ? `<a class="button primary" href="${esc(safeUrl(item.link))}" target="_blank" rel="noopener noreferrer">Read original ${icon("external")}</a>` : '<span class="hint">Sample text for trying the reader</span>'}</div>`,
     true,
   );
+  $("#dialog").dataset.articleId = id;
+  const tools = $("#dialog .reader-tools");
+  const previewImage = $("#dialog .reader-image");
+  if (tools && previewImage) previewImage.before(tools);
+  if (typeof item.fullArticle?.html === "string") {
+    $("#reader-body").classList.add("full-article");
+    $("#reader-body").replaceChildren(
+      renderArticleContent(item.fullArticle.html, document),
+    );
+    $("#dialog .reader-image")?.remove();
+  }
+}
+async function fetchFullArticle(id, button) {
+  const item = state.items.find((i) => i.id === id);
+  if (!item || !safeUrl(item.link)) return;
+  button.disabled = true;
+  button.textContent = "Loading full article…";
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 28000);
+  try {
+    const response = await fetch(
+      `/api/article?url=${encodeURIComponent(item.link)}`,
+      { signal: controller.signal },
+    );
+    const article = await response.json();
+    if (!response.ok)
+      throw new Error(article.error || "Unable to load this article.");
+    if (typeof article.html !== "string")
+      throw new Error("No readable content returned.");
+    item.fullArticle = article;
+    persist();
+    // A request may complete after the reader was closed or another article opened.
+    if (!button.isConnected || $("#dialog").dataset.articleId !== id) return;
+    const body = $("#reader-body");
+    body.classList.add("full-article");
+    body.replaceChildren(renderArticleContent(article.html, document));
+    $("#dialog .reader-image")?.remove();
+    $("#reader-content-status").textContent = "Full article";
+    button.remove();
+    $("#reader-error").hidden = true;
+  } catch (error) {
+    if (!button.isConnected || $("#dialog").dataset.articleId !== id) return;
+    const notice = $("#reader-error");
+    notice.textContent =
+      error.name === "AbortError"
+        ? "The source took too long. Try again or Read original."
+        : error.message;
+    notice.hidden = false;
+    button.disabled = false;
+    button.textContent = "Try full article again";
+  } finally {
+    clearTimeout(timer);
+  }
 }
 function createFolder() {
   if (busy) {
@@ -716,6 +770,8 @@ document.addEventListener("click", (e) => {
     renderNav();
   }
   if (button.dataset.open) showArticle(button.dataset.open);
+  if (button.dataset.fullArticle)
+    fetchFullArticle(button.dataset.fullArticle, button);
   if (button.dataset.star) {
     const item = state.items.find((i) => i.id === button.dataset.star);
     updateItem(item.id, { starred: !item.starred });

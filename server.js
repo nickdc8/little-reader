@@ -1,7 +1,9 @@
 import http from "node:http";
 import { readFile } from "node:fs/promises";
 import handler from "./api/feed.js";
+import articleHandler from "./api/article.js";
 const types = {
+  "/article-content.js": ["article-content.js", "text/javascript"],
   "/theme.js": ["theme.js", "text/javascript"],
   "/": ["index.html", "text/html"],
   "/app.js": ["app.js", "text/javascript"],
@@ -16,6 +18,7 @@ const types = {
 const server = http.createServer(async (req, res) => {
   const path = new URL(req.url, "http://localhost").pathname;
   if (path === "/api/feed") return handler(req, res);
+  if (path === "/api/article") return articleHandler(req, res);
   if (!types[path]) {
     res.writeHead(404);
     res.end("Not found");
