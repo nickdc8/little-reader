@@ -40,6 +40,7 @@ The starter file contains public subscriptions only. Personal newsletter feed ad
 ## What it does
 
 - Read RSS 2.0, RSS 1.0 and Atom feeds
+- Show publisher favicons beside feeds and articles, with a letter fallback
 - Paste a direct feed URL, or a website that advertises its feed
 - Create, collapse, rename and remove folders; move feeds between them
 - Search downloaded article titles, sources and text
@@ -67,7 +68,7 @@ No deployment has been created automatically. You can review the project before 
 
 Subscriptions, folders, articles, read status and stars are stored in **localStorage in this browser**, under `little-reader:v1`. They survive reloads, but do not sync between devices, browsers or domains. Clearing site data removes them. Use **Download backup** periodically, and restore through **Import subscriptions**. OPML contains subscriptions and folders only.
 
-The server fetches feed addresses on your behalf and does not intentionally persist them. URLs are sent to the hosting provider as query parameters, so provider request logging may include them. Keep private newsletter feeds and exported backups private. Article images load directly from publishers; no external fonts, analytics, advertising SDKs or third-party feed proxies are used.
+The server fetches feed addresses on your behalf and does not intentionally persist them. URLs are sent to the hosting provider as query parameters, so provider request logging may include them. Keep private newsletter feeds and exported backups private. Article images and favicons load directly from publishers; no external fonts, analytics, advertising SDKs or third-party feed proxies are used.
 
 The deployed app has no login: visitors have their own browser-local collection. The fetch endpoint is accessible to anyone with the app address. The same protections apply to full-article requests. Private/reserved IP ranges, credentials in URLs and nonstandard ports are blocked; DNS is checked and the connection pinned to that checked address, including after redirects. Requests have time and size limits. This is intended for personal use, not as a large public feed-fetching service.
 

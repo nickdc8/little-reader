@@ -50,6 +50,26 @@ const safeUrl = (str) => {
     return "";
   }
 };
+// Keep the initial visible until the publisher's icon has loaded successfully.
+function sourceMark(feed, articleLink = "") {
+  const initial = esc(feed?.title?.[0]?.toUpperCase() || "R");
+  const address =
+    safeUrl(feed?.site) || safeUrl(articleLink) || safeUrl(feed?.url);
+  const favicon = address ? new URL("/favicon.ico", address).href : "";
+  return `<span class="source-mark" aria-hidden="true"><span>${initial}</span>${favicon ? `<img class="source-favicon" src="${esc(favicon)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">` : ""}</span>`;
+}
+document.addEventListener(
+  "load",
+  (event) => {
+    if (
+      event.target instanceof HTMLImageElement &&
+      event.target.matches(".source-favicon")
+    ) {
+      event.target.classList.add("loaded");
+    }
+  },
+  true,
+);
 const sampleFeed = (id, title, folder) => ({
   id,
   title,
@@ -246,7 +266,7 @@ function renderNav() {
       html += feeds
         .map(
           (f) =>
-            `<button class="nav-row feed-child ${view.kind === "feed" && view.id === f.id ? "active" : ""}" data-view="feed" data-id="${esc(f.id)}" title="${esc(f.title)}" ${view.kind === "feed" && view.id === f.id ? 'aria-current="page"' : ""}><span class="source-mark" aria-hidden="true">${esc(f.title[0]?.toUpperCase())}</span><span class="label">${esc(f.title)}</span>${countFor((i) => i.feedId === f.id) ? `<span class="count">${countFor((i) => i.feedId === f.id)}</span>` : ""}</button>`,
+            `<button class="nav-row feed-child ${view.kind === "feed" && view.id === f.id ? "active" : ""}" data-view="feed" data-id="${esc(f.id)}" title="${esc(f.title)}" ${view.kind === "feed" && view.id === f.id ? 'aria-current="page"' : ""}>${sourceMark(f)}<span class="label">${esc(f.title)}</span>${countFor((i) => i.feedId === f.id) ? `<span class="count">${countFor((i) => i.feedId === f.id)}</span>` : ""}</button>`,
         )
         .join("");
   }
@@ -338,7 +358,7 @@ function renderArticles() {
       const heading =
         group !== previous ? `<h2 class="date-label">${esc(group)}</h2>` : "";
       previous = group;
-      return `${heading}<article class="article ${i.read ? "read" : "unread"}" data-item="${esc(i.id)}"><div class="article-main"><div class="article-meta"><span class="source-mark" aria-hidden="true">${esc(feed?.title[0]?.toUpperCase() || "R")}</span><span class="source-name">${esc(feed?.title || "Source")}</span><span aria-hidden="true">·</span><time datetime="${esc(i.date || "")}" title="${esc(i.date ? new Date(i.date).toLocaleString() : "Undated")}">${esc(relative(i.date))}</time></div><button class="article-title" data-open="${esc(i.id)}">${esc(i.title)}</button><p class="article-summary">${esc(i.summary)}</p></div>${safeUrl(i.image) || (state.demo && /^\/sample-\w+\.svg$/.test(i.image)) ? `<img class="thumbnail" src="${esc(i.image)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}<div class="article-actions"><button class="icon-button ${i.starred ? "starred" : ""}" data-star="${esc(i.id)}" aria-label="${i.starred ? "Unstar" : "Star"} ${esc(i.title)}" aria-pressed="${!!i.starred}" title="${i.starred ? "Remove star" : "Star article"}">${icon("star")}</button><button class="icon-button read-toggle" data-read="${esc(i.id)}" aria-label="Mark ${esc(i.title)} ${i.read ? "unread" : "read"}" aria-pressed="${!!i.read}" title="Mark ${i.read ? "unread" : "read"}">${icon("circlecheck")}</button>${safeUrl(i.link) ? `<a class="icon-button external" href="${esc(safeUrl(i.link))}" target="_blank" rel="noopener noreferrer" data-external="${esc(i.id)}" aria-label="Open ${esc(i.title)} on its website" title="Open original">${icon("external")}</a>` : ""}</div></article>`;
+      return `${heading}<article class="article ${i.read ? "read" : "unread"}" data-item="${esc(i.id)}"><div class="article-main"><div class="article-meta">${sourceMark(feed, i.link)}<span class="source-name">${esc(feed?.title || "Source")}</span><span aria-hidden="true">·</span><time datetime="${esc(i.date || "")}" title="${esc(i.date ? new Date(i.date).toLocaleString() : "Undated")}">${esc(relative(i.date))}</time></div><button class="article-title" data-open="${esc(i.id)}">${esc(i.title)}</button><p class="article-summary">${esc(i.summary)}</p></div>${safeUrl(i.image) || (state.demo && /^\/sample-\w+\.svg$/.test(i.image)) ? `<img class="thumbnail" src="${esc(i.image)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}<div class="article-actions"><button class="icon-button ${i.starred ? "starred" : ""}" data-star="${esc(i.id)}" aria-label="${i.starred ? "Unstar" : "Star"} ${esc(i.title)}" aria-pressed="${!!i.starred}" title="${i.starred ? "Remove star" : "Star article"}">${icon("star")}</button><button class="icon-button read-toggle" data-read="${esc(i.id)}" aria-label="Mark ${esc(i.title)} ${i.read ? "unread" : "read"}" aria-pressed="${!!i.read}" title="Mark ${i.read ? "unread" : "read"}">${icon("circlecheck")}</button>${safeUrl(i.link) ? `<a class="icon-button external" href="${esc(safeUrl(i.link))}" target="_blank" rel="noopener noreferrer" data-external="${esc(i.id)}" aria-label="Open ${esc(i.title)} on its website" title="Open original">${icon("external")}</a>` : ""}</div></article>`;
     })
     .join("");
   if (!items.length)

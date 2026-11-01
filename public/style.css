@@ -308,6 +308,22 @@ nav {
   color: var(--secondary);
   flex-shrink: 0;
 }
+.source-mark {
+  position: relative;
+  overflow: hidden;
+}
+.source-favicon {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--paper);
+  visibility: hidden;
+}
+.source-favicon.loaded {
+  visibility: visible;
+}
 .add-feed {
   display: flex;
   align-items: center;
