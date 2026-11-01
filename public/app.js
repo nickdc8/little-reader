@@ -246,7 +246,7 @@ function renderNav() {
       html += feeds
         .map(
           (f) =>
-            `<button class="nav-row feed-child ${view.kind === "feed" && view.id === f.id ? "active" : ""}" data-view="feed" data-id="${esc(f.id)}" ${view.kind === "feed" && view.id === f.id ? 'aria-current="page"' : ""}><span class="source-mark" aria-hidden="true">${esc(f.title[0]?.toUpperCase())}</span><span class="label">${esc(f.title)}</span>${countFor((i) => i.feedId === f.id) ? `<span class="count">${countFor((i) => i.feedId === f.id)}</span>` : ""}</button>`,
+            `<button class="nav-row feed-child ${view.kind === "feed" && view.id === f.id ? "active" : ""}" data-view="feed" data-id="${esc(f.id)}" title="${esc(f.title)}" ${view.kind === "feed" && view.id === f.id ? 'aria-current="page"' : ""}><span class="source-mark" aria-hidden="true">${esc(f.title[0]?.toUpperCase())}</span><span class="label">${esc(f.title)}</span>${countFor((i) => i.feedId === f.id) ? `<span class="count">${countFor((i) => i.feedId === f.id)}</span>` : ""}</button>`,
         )
         .join("");
   }
