@@ -1,5 +1,7 @@
 # Little Reader
 
+![Little Reader — Your sources. At your pace.](docs/reader-hero.png)
+
 Your sources. At your pace.
 
 A small RSS reader inspired by the useful bits of the Google Reader era: subscriptions, folders, chronological articles, and a star for things worth keeping. No account, database, recommendation engine, or build step.

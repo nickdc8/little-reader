@@ -1,0 +1,9 @@
+Created with the built-in image generation tool using reader-hero-screenshot.png.
+
+Use case: ads-marketing
+Asset type: wide GitHub README hero banner, landscape approximately 16:9.
+Primary request: Create a polished advertising hero for Little Reader, a small RSS reader, using the supplied real app screenshot as the central product visual.
+Input image 1: supporting compositing input, actual Little Reader interface. Preserve its layout, blue accents, sidebar, article cards and typography faithfully; do not invent controls or features. It is a sample collection.
+Composition: Editorial product advertising. A generous warm off-white canvas, headline area above a large crisp screenshot in a subtle rounded window with a fine border and soft natural shadow. Screenshot occupies most of the lower two thirds, front-facing with only minimal perspective, readable at README width. Neatly composed, sophisticated and calm.
+Text (verbatim): "Little Reader" and "Your sources. At your pace." and a small descriptor "A small RSS reader."
+Use dark ink typography, the app's muted blue as a restrained accent, ample breathing room. Minimal original geometric RSS motif allowed near the title. No extraneous badges, fake metrics, people, devices, glow or watermarks. Keep every word of advertising copy exact. Focus on the authentic app screenshot.
